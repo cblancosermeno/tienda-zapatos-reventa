@@ -1,14 +1,15 @@
 import { Link } from "react-router-dom";
 import logo from "../assets/logo-sneaker-white.jpg";
-import { WHATSAPP_NUMERO, LLAMADA_NUMERO } from "../config/contacto.js";
+import { useRevendedor } from "../context/RevendedorContext.jsx";
 
 const WHATSAPP_MENSAJE = "Hola, quiero más información sobre sus zapatillas";
 
 function PaginaInicio() {
-  const whatsappHref = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(
+  const { whatsapp_numero, telefono_llamada } = useRevendedor();
+  const whatsappHref = `https://wa.me/${whatsapp_numero}?text=${encodeURIComponent(
     WHATSAPP_MENSAJE
   )}`;
-  const llamadaHref = `tel:${LLAMADA_NUMERO}`;
+  const llamadaHref = `tel:${telefono_llamada}`;
 
   return (
     <div className="inicio">

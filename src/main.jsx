@@ -4,15 +4,18 @@ import { BrowserRouter } from "react-router-dom";
 import { Analytics } from "@vercel/analytics/react";
 import App from "./App.jsx";
 import { CarritoProvider } from "./context/CarritoContext.jsx";
+import { RevendedorProvider } from "./context/RevendedorContext.jsx";
 import "./styles.css";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <BrowserRouter>
-      <CarritoProvider>
-        <App />
-        <Analytics />
-      </CarritoProvider>
+      <RevendedorProvider>
+        <CarritoProvider>
+          <App />
+          <Analytics />
+        </CarritoProvider>
+      </RevendedorProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

@@ -4,6 +4,7 @@ import { obtenerProductoDetalle } from "../api.js";
 import { useCarrito } from "../context/CarritoContext.jsx";
 import { tallaACm } from "../utils/tallas.js";
 import { conRecargo } from "../utils/precios.js";
+import { useRevendedor } from "../context/RevendedorContext.jsx";
 
 // Si la URL termina en una extensión de video, la mostramos con <video>
 // en vez de <img>. No hace falta marcar nada al cargarla: alcanza con
@@ -16,6 +17,7 @@ function PaginaProducto() {
   const { id } = useParams();
   const navegar = useNavigate();
   const { agregarAlCarrito } = useCarrito();
+  const { recargo } = useRevendedor();
   const [searchParams] = useSearchParams();
   const tallaDesdeUrl = searchParams.get("talla") || "";
   const colorDesdeUrl = searchParams.get("color") || "";
@@ -127,15 +129,16 @@ function PaginaProducto() {
   const preciosFinalesConStock = [...new Set(variantesConStock.map((v) => Number(v.precio_final ?? v.precio)))];
   let textoPrecio;
   if (varianteSeleccionada) {
-    textoPrecio = `$${conRecargo(varianteSeleccionada.precio_final ?? varianteSeleccionada.precio)}`;
+    textoPrecio = `$${conRecargo(varianteSeleccionada.precio_final ?? varianteSeleccionada.precio, recargo)}`;
   } else if (preciosFinalesConStock.length > 1) {
     const min = Math.min(...preciosFinalesConStock);
     const max = Math.max(...preciosFinalesConStock);
-    textoPrecio = `$${conRecargo(min)} - $${conRecargo(max)}`;
+    textoPrecio = `$${conRecargo(min, recargo)} - $${conRecargo(max, recargo)}`;
   } else if (preciosFinalesConStock.length === 1) {
-    textoPrecio = `$${conRecargo(preciosFinalesConStock[0])}`;
+    textoPrecio = `$${conRecargo(preciosFinalesConStock[0], recargo)}`;
   } else {
-    textoPrecio = producto.precio_referencia != null ? `$${conRecargo(producto.precio_referencia)}` : "Consultar";
+    textoPrecio =
+      producto.precio_referencia != null ? `$${conRecargo(producto.precio_referencia, recargo)}` : "Consultar";
   }
 
   const varianteEnOferta = varianteSeleccionada?.en_oferta && varianteSeleccionada.descuento_porcentaje > 0;
@@ -156,7 +159,7 @@ function PaginaProducto() {
         marca: producto.marca,
         talla: varianteSeleccionada.talla,
         color: varianteSeleccionada.color,
-        precio: Number(conRecargo(varianteSeleccionada.precio_final ?? varianteSeleccionada.precio)),
+        precio: Number(conRecargo(varianteSeleccionada.precio_final ?? varianteSeleccionada.precio, recargo)),
         imagenUrl: galeria[0]?.url || producto.imagenes[0]?.url,
         stock: varianteSeleccionada.stock,
       },
@@ -263,7 +266,7 @@ function PaginaProducto() {
           <h1>{producto.nombre}</h1>
           {varianteEnOferta ? (
             <p className="precio-detalle-oferta">
-              <span className="precio-tachado-detalle">${conRecargo(varianteSeleccionada.precio)}</span>
+              <span className="precio-tachado-detalle">${conRecargo(varianteSeleccionada.precio, recargo)}</span>
               <span className="precio-detalle">{textoPrecio}</span>
               <span className="etiqueta-descuento-detalle">-{varianteSeleccionada.descuento_porcentaje}%</span>
             </p>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useCarrito } from "../context/CarritoContext.jsx";
-import { WHATSAPP_NUMERO } from "../config/contacto.js";
+import { useRevendedor } from "../context/RevendedorContext.jsx";
 
 function construirMensajeWhatsapp(items, total, cliente) {
   const lineas = items.map(
@@ -31,6 +31,7 @@ function construirMensajeWhatsapp(items, total, cliente) {
 
 function PaginaCarrito() {
   const { items, actualizarCantidad, eliminarDelCarrito, vaciarCarrito, total } = useCarrito();
+  const { whatsapp_numero } = useRevendedor();
 
   const [cliente, setCliente] = useState({ nombre: "", telefono: "", direccion: "" });
   const [pedidoEnviado, setPedidoEnviado] = useState(false);
@@ -39,7 +40,7 @@ function PaginaCarrito() {
     e.preventDefault();
 
     const mensaje = construirMensajeWhatsapp(items, total, cliente);
-    const href = `https://wa.me/${WHATSAPP_NUMERO}?text=${encodeURIComponent(mensaje)}`;
+    const href = `https://wa.me/${whatsapp_numero}?text=${encodeURIComponent(mensaje)}`;
     window.open(href, "_blank", "noopener,noreferrer");
 
     setPedidoEnviado(true);
