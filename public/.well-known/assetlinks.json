@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "sneakerwhite.app",
+        "sha256_cert_fingerprints": ["68:42:AB:4E:A4:C5:69:58:3C:DF:EB:02:87:92:01:0D:F5:19:20:36:97:97:F9:D6:4A:81:DA:52:E0:87:6E:AE"]
+      }
+    }]
